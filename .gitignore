@@ -1,0 +1,10 @@
+/.svn/
+.svn
+*.pyc
+*.pyo
+*.svn
+.svn/*
+/.settings/
+.project
+*.svn-base
+.pydevproject  
