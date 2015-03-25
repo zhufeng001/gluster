@@ -385,24 +385,12 @@ class DiskDir(DiskCommon):
             data['metadata'] = self.metadata
         return data
 
-    def put_object(self, name, timestamp, size, content_type,
-                    etag, deleted=0):
-        # TODO: Implement the specifics of this func.
-        pass
-
-    def initialize(self, timestamp):
-        pass
-
     def update_put_timestamp(self, timestamp):
         """
         Create the container if it doesn't exist and update the timestamp
         """
         if not os.path.exists(self.datadir):
             self.put(self.metadata)
-
-    def delete_object(self, name, timestamp):
-        # TODO: Implement the delete object
-        pass
 
     def delete_db(self, timestamp):
         """
