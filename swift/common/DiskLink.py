@@ -27,7 +27,7 @@ from gluster.swift.common.utils import X_CONTENT_TYPE, X_CONTENT_LENGTH, \
      FILE_TYPE, DEFAULT_UID, DEFAULT_GID
 
 import logging
-from swift.obj.server import DiskFile
+from swift.link.server import DiskLink
 
 
 DATADIR = 'objects'
@@ -37,7 +37,7 @@ KEEP_CACHE_SIZE = (5 * 1024 * 1024)
 DISALLOWED_HEADERS = set('content-length content-type deleted etag'.split())
 
 
-class Gluster_DiskFile(DiskFile):
+class Gluster_DiskLink(DiskLink):
     """
     Manage object files on disk.
 
@@ -225,15 +225,9 @@ class Gluster_DiskFile(DiskFile):
         self.data_file = self.datadir + '/' + self.obj + extension
         return True
 
-    def unlinkold(self, timestamp):
-        """
-        Remove any older versions of the object file.  Any file that has an
-        older timestamp than timestamp will be deleted.
-
-        :param timestamp: timestamp to compare with each file
-        """
-        if self.metadata and self.metadata['X-Timestamp'] != timestamp:
-            self.unlink()
+    def unlinkold(self):
+        
+        self.unlink()
 
     def unlink(self):
         """
@@ -257,10 +251,6 @@ class Gluster_DiskFile(DiskFile):
                     if err.errno != errno.ENOENT:
                         raise
 
-        #Remove entire path for object.
-        #remove_dir_path(self.obj_path, self.container_path)
-
-        self.metadata = {}
         self.data_file = None
 
     def get_data_file_size(self):
