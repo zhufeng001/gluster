@@ -1,0 +1,20 @@
+curl -v -H 'X-Storage-User: glfs:admin' -H 'X-Storage-Pass: admin' -k http://localhost:443/auth/v1.0
+
+curl -v -H 'X-Storage-User: glfs:she' -H 'X-Storage-Pass: she' -k http://localhost:443/auth/v1.0
+
+curl -v -X PUT -H 'X-Auth-Token: ' http://localhost:443/v1/AUTH_glfs/test -k
+
+curl -v -X GET -H 'X-Auth-Token: ' http://localhost:443/v1/AUTH_glfs -k
+
+gluster-swift-gen-builders glfs1 glfs2 glfs3 glfs4 glfs5 glfs6 glfs7 glfs8 glfs9 glfs11 glfs12 glfs13 glfs14 glfs5 glfs16 glfs17 glfs18 glfs19
+
+mount -t nfs -o rw 192.168.36.1:/home/she/code/gluster_ufo_backup /root/nfs 
+
+curl -v -X PUT -H 'X-Auth-Token: ' http://localhost:443/v1/AUTH_glfs/test -k
+
+curl -X PUT -H "X-Auth-Token: " "http://localhost:443/v1/AUTH_82/test/12" -T object.builder
+
+mount -t nfs -o rw 192.168.36.18:/usr/lib/python2.6/site-packages/gluster /root/workspace1/gluster/
+
+mount -t nfs -o rw 192.168.36.18:/usr/lib/python2.6/site-packages/swift /root/workspace1/swift/
+
