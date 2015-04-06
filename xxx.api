@@ -1,0 +1,17 @@
+xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+xxx curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&fype=d&recursive=true&type=NORMAL" -H "X-Auth-Token: "
+xxx curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&fype=d&recursive=true&type=NORMAL"  -H "X-Auth-Token: "
+xxx curl -i -X POST -d  '{ "list":[{"path":"/test/c","ftype":"d"},{" path ":"/test/b/c","ftype":"r"}]}'  "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
+xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test?op=MOVE&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test1/cc"
+xxx curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/c","to":"/test/d","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL"-H "X-Auth-Token: "
+xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/a1?op=COPY&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /a2/cc"
+xxx curl -i -X POST –d '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/b","to":"/test2/c","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/test?op=COPY&type=NORMAL" -H "X-Auth-Token: "
+xxx curl -i -L -X GET "http://localhost:443/v1/AUTH_glfs/test/a3?op=OPEN&offset=45&length=100&type=NORMAL&version=LATEST&mode=NORMAL"
+
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/s1?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+curl -i -X GET "http://localhost:443/v1/AUTH_glfs/test/s1?op=LIST&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test/s2?op=DELETE&ftype=d&recursive=true&type=NORMAL" -H "X-Auth-Token: "
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/s3?op=MOVE&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test1/cc"
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/a1?op=COPY&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /a2/cc"
+
