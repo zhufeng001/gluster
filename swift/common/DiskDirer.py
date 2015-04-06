@@ -98,6 +98,23 @@ class DiskDirer(DiskCommon):
         os.chown(self.datadir, self.uid, self.gid)
         self.dir_exists = True
 
+    def move(self,srcdir):
+        
+        cmd = 'mv %s %s' % (srcdir,self.datadir)
+        os.system(cmd)
+        
+        os.chown(self.datadir, self.uid, self.gid)
+        self.dir_exists = True
+        
+
+    def copy(self,srcdir):
+        
+        cmd = 'cp -rf %s %s' % (srcdir,self.datadir)
+        os.system(cmd)
+        
+        os.chown(self.datadir, self.uid, self.gid)
+        self.dir_exists = True
+        
     def unlink(self):
         """
         Remove directory/container if empty.
