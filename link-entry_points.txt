@@ -1,0 +1,10 @@
+[paste.app_factory]
+account = gluster.swift.account.server:app_factory
+object = gluster.swift.obj.server:app_factory
+container = gluster.swift.container.server:app_factory
+proxy = gluster.swift.proxy.server:app_factory
+
+[paste.filter_factory]
+gluster = gluster.swift.common.middleware.gluster:filter_factory
+direr = gluster.swift.direr.server:filter_factory
+link = gluster.swift.link.server:filter_factory 

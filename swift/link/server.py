@@ -13,21 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" Object Server for Gluster Swift UFO """
 
 # Simply importing this monkey patches the constraint handling to fit our
 # needs
 import gluster.swift.common.constraints
 
-from swift.obj import server
+from swift.link import server
 from gluster.swift.common.DiskLink import Gluster_DiskLink
 
-# Monkey patch the object server module to use Gluster's DiskFile definition
 server.DiskLink = Gluster_DiskLink
 
+# def app_factory(global_conf, **local_conf):
+    
+#    conf = global_conf.copy()
+#    conf.update(local_conf)
+#    return server.LinkController(conf)
 
-def app_factory(global_conf, **local_conf):
-    """paste.deploy app factory for creating WSGI object server apps"""
+def filter_factory(global_conf, **local_conf):
+    
     conf = global_conf.copy()
     conf.update(local_conf)
-    return server.LinkController(conf)
+
+    def link_filter(app):
+        return server.LinkController(app,conf)
+    return link_filter
+
