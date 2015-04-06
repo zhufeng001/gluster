@@ -12,8 +12,17 @@ class DirerController(server.DirerController):
         return DiskDirer(self.root, drive, account, container, direr,self.logger)
 
 
-def app_factory(global_conf, **local_conf):
-    """paste.deploy app factory for creating WSGI container server apps."""
+# def app_factory(global_conf, **local_conf):
+    
+#    conf = global_conf.copy()
+#    conf.update(local_conf)
+#    return DirerController(conf)
+
+def filter_factory(global_conf, **local_conf):
+    
     conf = global_conf.copy()
     conf.update(local_conf)
-    return DirerController(conf)
+
+    def direr_filter(app):
+        return DirerController(app,conf)
+    return direr_filter

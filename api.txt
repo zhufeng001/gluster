@@ -84,7 +84,7 @@ xxx curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&fype=d&r
 
 curl -i -X POST –d  '{ "list":[{"path":"文件或目录路径",},{" path ":"文件或目录路径",}]}' "http://IP:Port/v1/AUTH_{Tenant_id}/batch?op=DELETE&type=<NORMAL|SECRET|BACKUP>]"-H "X-Auth-Token: { Token_id}"
 
-xxx curl -i -X POST -d  '{ "list":[{"path":"/test/c","ftype":"d"},{" path ":"/test/b/c","ftype":"r"}]}'  "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
+xxx curl -i -X POST -d  '{ "list":[{"path":"/test/c","ftype":"d"},{" path ":"/test/b/c","ftype":"r"}]}'  "http://localhost:443/v1/AUTH_glfs?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
 
 6.1 批量删除文件
 
@@ -100,7 +100,7 @@ xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test?op=MOVE&type=NORMAL" 
 
 curl -i -X POST –d  '{ "list":[{"from":"源路径","to":"目地路径"},{"from":"源路径","to":"目地路径"}]}' "http://IP:Port/v1/AUTH_{Tenant_id}/batch?op=MOVE[&type=<NORMAL|SECRET|BACKUP>]"-H "X-Auth-Token: { Token_id}"
 
-xxx curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/c","to":"/test/d","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL"-H "X-Auth-Token: "
+xxx curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/c","to":"/test/d","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs?op=MOVE&type=NORMAL"-H "X-Auth-Token: "
 
 复制文件，目录
 curl -i -X PUT "http://IP:Port/v1/AUTH_{Tenant_id}/<path>?op=COPY[&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}" -H "Destination: /<path>"
@@ -110,7 +110,7 @@ xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/a1?op=COPY&type=NORMA
 
 curl -i -X POST –d  '{"list":[{"from":"源路径","to":"目地路径"},{"from":"源路径","to":"目地路径"}]}' "http://IP:Port/v1/AUTH_{Tenant_id}/batch?op=COPY&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}"
 
-xxx curl -i -X POST –d '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/b","to":"/test2/c","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/test?op=COPY&type=NORMAL" -H "X-Auth-Token: "
+xxx curl -i -X POST –d '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/b","to":"/test2/c","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs?op=COPY&type=NORMAL" -H "X-Auth-Token: "
 
 获取文件
 

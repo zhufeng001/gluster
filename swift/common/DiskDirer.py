@@ -69,14 +69,9 @@ class DiskDirer(DiskCommon):
     def __init__(self, path, drive, account, container,direr, logger,
                  uid=DEFAULT_UID, gid=DEFAULT_GID):
         self.root = path
-        if container:
-            self.container = container
-        else:
-            self.container = None
-        if self.container:
-            self.datadir = os.path.join(path, drive, self.container)
-        else:
-            self.datadir = os.path.join(path, drive)
+        
+        self.datadir = os.path.join(path, drive,container,direr)
+        
         self.account = account
         assert logger is not None
         self.logger = logger
@@ -147,7 +142,7 @@ class DiskDirer(DiskCommon):
         if not os.path.exists(self.datadir):
             self.put()
 
-    def delete_db(self, timestamp):
+    def delete_db(self):
         """
         Delete the container
         """
