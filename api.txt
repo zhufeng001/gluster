@@ -1,0 +1,143 @@
+-type c
+              File is of type c:
+
+              b      block (buffered) special
+
+              c      character (unbuffered) special
+
+              d      directory
+
+              p      named pipe (FIFO)
+
+              f      regular file
+
+              l      symbolic  link;  this is never true if the -L option or
+the -follow option is in effect, unless the symbolic link is broken.  If you
+want to search for symbolic links when -L is in effect, use
+                     -xtype.
+
+              s      socket
+
+              D      door (Solaris)
+
+
+
+
+1 验证签发token
+
+2 容器列表
+
+3 创建容器
+
+4 删除容器
+
+5 列出对象
+
+6 创建对象
+
+7 删除对象
+
+8 复制对象
+
+9 获取对象
+
+
+------------------------
+1 获取配额信息
+
+curl -i -X GET "http://IP:Port/v1/AUTH_{Tenant_id}/quota?op=info[&type=<NORMAL|SECRET|BACKUP>]"
+
+
+2 上传文件
+
+curl -i -X PUT -T <LOCAL_FILE> "http://IP:Port/v1/AUTH_{Tenant_id}/<PATH>?op=CREATE[&overwrite=<true|false>][&md5=原文件的MD5值][&type=<NORMAL|SECRET|BACKUP>][&metadata=<STRING>][&mode=<NORMAL|ENCRYPT|COMPRESS|ENCRYPT_COMPRESS>][&storetype=<USER|CORRESPONDING>]" -H "X-Auth-Token: { Token_id}"
+
+
+	3 上传临时文件
+
+	4 合并文件
+
+5 创建目录
+
+
+curl -v -X PUT -H 'X-Auth-Token: ' http://localhost:443/v1/AUTH_glfs/test -k
+
+xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X PUT "http://IP:Port/v1/AUTH_{Tenant_id}/<PATH>?op=MKDIRS[&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}"
+
+curl -i -X PUT "http://IP:Port/v1/AUTH_e8b18580e5b44cb79b10bd0f7a03bbdc/temp?op=MKDIRS&type=NORMAL" -H "X-Auth-Token: 22ec6a37ed6b4b23a435e6b9050f21a4"
+
+5 删除文件，目录
+
+curl -i -X DELETE "http://IP:Port/v1/AUTH_{Tenant_id}/<path>?op=DELETE[&recursive=<true|false>][&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}"
+
+xxx curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&fype=d&recursive=true&type=NORMAL" -H "X-Auth-Token: "
+
+创建空文件？不上传
+xxx curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&fype=d&recursive=true&type=NORMAL"  -H "X-Auth-Token: "
+5.1 删除文件
+
+5.2 删除目录
+
+6 批量删除文件，目录
+
+curl -i -X POST –d  '{ "list":[{"path":"文件或目录路径",},{" path ":"文件或目录路径",}]}' "http://IP:Port/v1/AUTH_{Tenant_id}/batch?op=DELETE&type=<NORMAL|SECRET|BACKUP>]"-H "X-Auth-Token: { Token_id}"
+
+xxx curl -i -X POST -d  '{ "list":[{"path":"/test/c","ftype":"d"},{" path ":"/test/b/c","ftype":"r"}]}'  "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
+
+6.1 批量删除文件
+
+6.2 批量删除目录
+
+移动文件，目录
+
+curl -i -X PUT "http://IP:Port/v1/AUTH_{Tenant_id}/<path>?op=MOVE[&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}" -H "Destination: /<path>"
+
+xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test?op=MOVE&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test1/cc"
+
+批量移动文件，目录
+
+curl -i -X POST –d  '{ "list":[{"from":"源路径","to":"目地路径"},{"from":"源路径","to":"目地路径"}]}' "http://IP:Port/v1/AUTH_{Tenant_id}/batch?op=MOVE[&type=<NORMAL|SECRET|BACKUP>]"-H "X-Auth-Token: { Token_id}"
+
+xxx curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/c","to":"/test/d","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL"-H "X-Auth-Token: "
+
+复制文件，目录
+curl -i -X PUT "http://IP:Port/v1/AUTH_{Tenant_id}/<path>?op=COPY[&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}" -H "Destination: /<path>"
+
+xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/a1?op=COPY&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /a2/cc"
+批量复制文件，目录
+
+curl -i -X POST –d  '{"list":[{"from":"源路径","to":"目地路径"},{"from":"源路径","to":"目地路径"}]}' "http://IP:Port/v1/AUTH_{Tenant_id}/batch?op=COPY&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}"
+
+xxx curl -i -X POST –d '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/b","to":"/test2/c","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/test?op=COPY&type=NORMAL" -H "X-Auth-Token: "
+
+获取文件
+
+curl -i -L "http://IP:Port/v1/AUTH_{Tenant_id}/<path>?op=OPEN[&offset=<LONG>][&length=<LONG>][&type=<NORMAL|SECRET|BACKUP>][&version=<LATEST|指定版本>][&mode=<NORMAL|ENCRYPT|COMPRESS|ENCRYPT_COMPRESS>]
+
+xxx curl -i -L -X GET "http://localhost:443/v1/AUTH_glfs/test/a3?op=OPEN&offset=45&length=100&type=NORMAL&version=LATEST&mode=NORMAL"
+
+----------------------------------------
+	获取文件历史版本？
+
+	获取用户操作历史
+
+	清除用户操作历史
+
+创建符号链接
+
+重命名文件，目录
+
+获取文件属性
+
+获取回收站文件列表
+
+从回收站恢复
+
+清空回收站
+
+设置权限
+
+获取用户文件列表
+
