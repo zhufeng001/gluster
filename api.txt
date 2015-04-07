@@ -126,14 +126,18 @@ xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=CREATESYMLINK&&
 
 重命名文件，目录
 
+curl -i -X PUT "http://IP:Port/v1/AUTH_{Tenant_id}/<PATH>?op=RENAME&destination=<PATH>[&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: {Token_id}"
+
+xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/112"
+
+
+
 ----------------------------------------
 	获取文件历史版本？
 
 	获取用户操作历史
 
 	清除用户操作历史
-
-重命名文件，目录
 
 获取文件属性
 

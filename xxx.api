@@ -21,3 +21,11 @@ curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test2/cc?op=COPY&ftype=d&type=
 创建链接 
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=CREATESYMLINK&ftype=l&type=NORMAL" -H "X-Auth-Token: "  -H "Destination: /test3/112"
 
+
+批量处理
+
+curl -i -X POST -d  '{ "list":[{"path":"/test/c","ftype":"d"},{" path ":"/test/b/c","ftype":"r"}]}'  "http://localhost:443/v1/AUTH_glfs/batch?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
+curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/c","to":"/test/d","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL"-H "X-Auth-Token: "
+curl -i -X POST –d '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/b","to":"/test2/c","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=COPY&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/112"
