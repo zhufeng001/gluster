@@ -1,24 +1,26 @@
-xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
-xxx curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&fype=d&recursive=true&type=NORMAL" -H "X-Auth-Token: "
-xxx curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&fype=d&recursive=true&type=NORMAL"  -H "X-Auth-Token: "
 xxx curl -i -X POST -d  '{ "list":[{"path":"/test/c","ftype":"d"},{" path ":"/test/b/c","ftype":"r"}]}'  "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
-xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test?op=MOVE&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test1/cc"
 xxx curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/c","to":"/test/d","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL"-H "X-Auth-Token: "
-xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/a1?op=COPY&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /a2/cc"
 xxx curl -i -X POST –d '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/b","to":"/test2/c","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/test?op=COPY&type=NORMAL" -H "X-Auth-Token: "
-xxx curl -i -L -X GET "http://localhost:443/v1/AUTH_glfs/test/a3?op=OPEN&offset=45&length=100&type=NORMAL&version=LATEST&mode=NORMAL"
 
 
+目录管理
+
+创建
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/s1?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+列出文件
 curl -i -X GET "http://localhost:443/v1/AUTH_glfs/test/s1?op=LIST&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+删除
 curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test/s2?op=DELETE&ftype=d&recursive=true&type=NORMAL" -H "X-Auth-Token: "
-
-
+移动
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/s1?op=MOVE&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test2/cc"
-
+拷贝
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test2/cc?op=COPY&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/aa"
+重命名
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/112"
 
-创建链接 
+链接管理
+
+创建 
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=CREATESYMLINK&ftype=l&type=NORMAL" -H "X-Auth-Token: "  -H "Destination: /test3/112"
 
 
@@ -28,4 +30,40 @@ curl -i -X POST -d  '{ "list":[{"path":"/test/c","ftype":"d"},{" path ":"/test/b
 curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/c","to":"/test/d","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL"-H "X-Auth-Token: "
 curl -i -X POST –d '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/b","to":"/test2/c","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=COPY&type=NORMAL" -H "X-Auth-Token: "
 
-curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/112"
+文件管理
+
+# 上传空文件,不传输数据，创建空文件，另一个则是直接创建文件的
+# curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=CREATE&overwrite=false&type=NORMAL&metadata='test case file'&mode=NORMAL&storetype=USER" -H "X-Auth-Token: "
+
+
+上传文件
+curl -i -X PUT -T a.txt  "http://localhost:443/v1/AUTH_glfs/test/12?op=CREATE&overwrite=false&md5=aaaa-bbbb-cccc-eeeee-ffff&type=NORMAL&metadata='test case file'&mode=NORMAL&storetype=USER" -H "X-Auth-Token: "
+上传临时文件
+curl -i -X PUT -T a.txt "http://localhost:443/v1/AUTH_glfs/createtempfile?op=CREATE[&overwrite=<true|false>][&md5=原文件的MD5值] [&type=<NORMAL|SECRET|BACKUP >][&metadata=<STRING>]  [&mode=<NORMAL|ENCRYPT|COMPRESS|ENCRYPT_COMPRESS>] [&storetype=<USER|CORRESPONDING>] " -H "X-Auth-Token: "
+
+合并文件
+curl -i -X POST -d  "{"block_list":["md5":"value", "md5":"value","md5":"value" ]}"  "http://IP:Port/v1/AUTH_{Tenant_id}/<PATH>createsuperfile?op=MERGE[&name=<文件名>][&overwrite=<true|false>][&md5=原文件的MD5值]" -H "X-Auth-Token: { Token_id}"
+
+删除
+curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/test?op=DELETE&fype=d&type=NORMAL"  -H "X-Auth-Token: "
+移动
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test?op=MOVE&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test1/cc"
+复制文件
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/a1?op=COPY&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /a2/cc"
+获取文件
+curl -i -L -X GET "http://localhost:443/v1/AUTH_glfs/test/a3?op=OPEN&type=NORMAL&version=LATEST&mode=NORMAL"
+断点续传
+curl -i -L -X GET "http://localhost:443/v1/AUTH_glfs/test/a3?op=OPEN&offset=45&length=100&type=NORMAL&version=LATEST&mode=NORMAL"
+获取文件历史
+curl -i -L "http://IP:Port/v1/AUTH_{Tenant_id}/<path>?op=GETHISTORY[&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}"
+重命名
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/112"
+获取文件属性
+curl -i "http://IP:Port/v1/AUTH_{Tenant_id}/<PATH>?op=GETFILEATTR[&type=<NORMAL|SECRET|BACKUP>][&version=<LATEST|指定版本>]" -H "X-Auth-Token: { Token_id}"
+
+
+特殊接口
+
+获取配额
+curl -i -X GET "http://IP:Port/v1/AUTH_{Tenant_id}/quota?op=info[&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}"
+
