@@ -1,0 +1,155 @@
+Index: swift/common/DiskFile.py
+===================================================================
+--- swift/common/DiskFile.py	(版本 205)
++++ swift/common/DiskFile.py	(工作副本)
+@@ -92,18 +92,7 @@
+             return
+ 
+         self.data_file = os.path.join(self.datadir, self.obj)
+-        self.metadata = read_metadata(self.datadir + '/' + self.obj)
+-        if not self.metadata:
+-            create_object_metadata(self.datadir + '/' + self.obj)
+-            self.metadata = read_metadata(self.datadir + '/' + self.obj)
+-
+-        if not validate_object(self.metadata):
+-            create_object_metadata(self.datadir + '/' + self.obj)
+-            self.metadata = read_metadata(self.datadir + '/' +
+-                                        self.obj)
+-
+-        self.filter_metadata()
+-
++        
+         if os.path.isdir(self.datadir + '/' + self.obj):
+             self.is_dir = True
+         else:
+@@ -142,15 +131,11 @@
+         #If dir aleady exist just override metadata.
+         mkdirs(dir_path)
+         do_chown(dir_path, self.uid, self.gid)
+-        create_object_metadata(dir_path)
++        
+         return True
+ 
+-    def put_metadata(self, metadata):
+-        obj_path = self.datadir + '/' + self.obj
+-        write_metadata(obj_path, metadata)
+-        self.metadata = metadata
+-
+-    def put(self, fd, tmppath, metadata, extension=''):
++    
++    def put(self, fd, tmppath, extension=''):
+         """
+         Finalize writing the file on disk, and renames it from the temp file to
+         the real location.  This should be called after the data has been
+@@ -165,43 +150,18 @@
+             # TombStone marker (deleted)
+             return True
+ 
+-        # Fix up the metadata to ensure it has a proper value for the
+-        # Content-Type metadata, as well as an X_TYPE and X_OBJECT_TYPE
+-        # metadata values.
+-
+-        content_type = metadata['Content-Type']
+-        if not content_type:
+-            metadata['Content-Type'] = FILE_TYPE
+-            x_object_type = FILE
+-        else:
+-            x_object_type = MARKER_DIR if content_type.lower() == DIR_TYPE else FILE
+-        metadata[X_TYPE] = OBJECT
+-        metadata[X_OBJECT_TYPE] = x_object_type
+-
+         if extension == '.meta':
+-            # Metadata recorded separately from the file
+-            self.put_metadata(metadata)
++            
+             return True
+ 
+         extension = ''
+ 
+-        if metadata[X_OBJECT_TYPE] == MARKER_DIR:
+-            self.create_dir_object(os.path.join(self.datadir, self.obj))
+-            self.put_metadata(metadata)
+-            self.data_file = self.datadir + '/' + self.obj
+-            return True
+-
+         # Check if directory already exists.
+         if self.is_dir:
+             self.logger.error('Directory already exists %s/%s' % \
+                           (self.datadir , self.obj))
+             return False
+ 
+-        timestamp = normalize_timestamp(metadata[X_TIMESTAMP])
+-        write_metadata(tmppath, metadata)
+-        if X_CONTENT_LENGTH in metadata:
+-            self.drop_cache(fd, 0, int(metadata[X_CONTENT_LENGTH]))
+-        tpool.execute(os.fsync, fd)
+         if self.obj_path:
+             dir_objs = self.obj_path.split('/')
+             tmp_path = ''
+@@ -221,19 +181,19 @@
+                                       self.obj + extension))
+         do_chown(os.path.join(self.datadir, self.obj + extension), \
+               self.uid, self.gid)
+-        self.metadata = metadata
++        
+         self.data_file = self.datadir + '/' + self.obj + extension
+         return True
+ 
+-    def unlinkold(self, timestamp):
++    def unlinkold(self):
+         """
+         Remove any older versions of the object file.  Any file that has an
+         older timestamp than timestamp will be deleted.
+ 
+         :param timestamp: timestamp to compare with each file
+         """
+-        if self.metadata and self.metadata['X-Timestamp'] != timestamp:
+-            self.unlink()
++        
++        self.unlink()
+ 
+     def unlink(self):
+         """
+@@ -257,10 +217,7 @@
+                     if err.errno != errno.ENOENT:
+                         raise
+ 
+-        #Remove entire path for object.
+-        #remove_dir_path(self.obj_path, self.container_path)
+-
+-        self.metadata = {}
++        
+         self.data_file = None
+ 
+     def get_data_file_size(self):
+@@ -280,29 +237,13 @@
+             file_size = 0
+             if self.data_file:
+                 file_size = os.path.getsize(self.data_file)
+-                if  X_CONTENT_LENGTH in self.metadata:
+-                    metadata_size = int(self.metadata[X_CONTENT_LENGTH])
+-                    if file_size != metadata_size:
+-                        self.metadata[X_CONTENT_LENGTH] = file_size
+-                        self.update_object(self.metadata)
+-
++                
+                 return file_size
+         except OSError, err:
+             if err.errno != errno.ENOENT:
+                 raise
+         raise DiskFileNotExist('Data File does not exist.')
+ 
+-    def update_object(self, metadata):
+-        obj_path = self.datadir + '/' + self.obj
+-        write_metadata(obj_path, metadata)
+-        self.metadata = metadata
+-
+-    def filter_metadata(self):
+-        if X_TYPE in self.metadata:
+-            self.metadata.pop(X_TYPE)
+-        if X_OBJECT_TYPE in self.metadata:
+-            self.metadata.pop(X_OBJECT_TYPE)
+-
+     @contextmanager
+     def mkstemp(self):
+         """Contextmanager to make a temporary file."""
