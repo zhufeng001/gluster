@@ -3,6 +3,36 @@ xxx curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d
 xxx curl -i -X POST –d '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/b","to":"/test2/c","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/test?op=COPY&type=NORMAL" -H "X-Auth-Token: "
 
 
+容器管理
+
+列出
+curl -i http://localhost:443/v1/AUTH_glfs -X GET -H "X-Auth-Token: "
+创建
+curl -i http://localhost:443/v1/AUTH_glfs/test -X PUT -H "X-Auth-Token: "
+删除
+curl -i http://localhost:443/v1/AUTH_glfs/test -X DELETE -H "X-Auth-Token: "
+
+对象管理
+
+列出
+curl -i http://localhost:443/v1/AUTH_glfs/test?parm=value -X GET -H "X-Auth-Token: "
+创建
+curl -i http://localhost:443/v1/AUTH_glfs/test/12 -X PUT -H "X-Auth-Token: " -T /root/install.log 
+删除
+curl -i http://localhost:443/v1/AUTH_glfs/test/11 -X DELETE -H "X-Auth-Token: "
+复制
+curl -i http://localhost:443/v1/AUTH_glfs/test/11 -X COPY -H "X-Auth-Token: " -H "Destination: /test/12"
+获取
+curl -i http://localhost:443/v1/AUTH_glfs/test/11 -X GET -H "X-Auth-Token: "
+
+
+
+
+
+
+
+
+
 目录管理
 
 创建
