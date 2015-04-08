@@ -151,3 +151,5 @@ xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&
 
 获取用户文件列表
 
+http://tarballs.openstack.org/swift/
+
