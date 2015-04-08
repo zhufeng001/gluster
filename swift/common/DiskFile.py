@@ -14,6 +14,8 @@
 # limitations under the License.
 
 import os
+import syslog
+import os.path
 from eventlet import tpool
 from tempfile import mkstemp
 from contextlib import contextmanager
@@ -88,10 +90,11 @@ class Gluster_DiskFile(DiskFile):
         self.is_valid = True
         self.uid = int(uid)
         self.gid = int(gid)
+        
+        self.data_file = os.path.join(self.datadir, self.obj)
+        
         if not os.path.exists(self.datadir + '/' + self.obj):
             return
-
-        self.data_file = os.path.join(self.datadir, self.obj)
         
         if os.path.isdir(self.datadir + '/' + self.obj):
             self.is_dir = True
@@ -115,13 +118,8 @@ class Gluster_DiskFile(DiskFile):
             self.fp = None
 
     def is_deleted(self):
-        """
-        Check if the file is deleted.
-
-        :returns: True if the file doesn't exist or has been flagged as
-                  deleted.
-        """
-        return not self.data_file
+        
+        return not os.path.exists(self.data_file)
 
     def create_dir_object(self, dir_path):
         #TODO: if object already exists???
@@ -154,7 +152,7 @@ class Gluster_DiskFile(DiskFile):
             
             return True
 
-        extension = ''
+       
 
         # Check if directory already exists.
         if self.is_dir:
@@ -178,11 +176,9 @@ class Gluster_DiskFile(DiskFile):
                         return False
 
         renamer(tmppath, os.path.join(self.datadir,
-                                      self.obj + extension))
-        do_chown(os.path.join(self.datadir, self.obj + extension), \
-              self.uid, self.gid)
+                                      self.obj))
+        do_chown(os.path.join(self.datadir, self.obj), self.uid, self.gid)
         
-        self.data_file = self.datadir + '/' + self.obj + extension
         return True
 
     def unlinkold(self):
@@ -220,6 +216,22 @@ class Gluster_DiskFile(DiskFile):
         
         self.data_file = None
 
+    def copy(self,srcfile):
+        
+        cmd = 'scp -r %s %s' % (srcfile,self.data_file)
+        syslog.syslog(syslog.LOG_ERR,'copy: '+str(cmd))
+        os.system(cmd)
+        
+        do_chown(os.path.join(self.datadir, self.obj), self.uid, self.gid)
+        
+    def move(self,srcfile):
+        
+        cmd = 'mv %s %s' % (srcfile,self.data_file)
+        syslog.syslog(syslog.LOG_ERR,'move: '+str(cmd))
+        os.system(cmd)
+        
+        do_chown(os.path.join(self.datadir, self.obj), self.uid, self.gid)
+         
     def get_data_file_size(self):
         """
         Returns the os.path.getsize for the file.  Raises an exception if this
