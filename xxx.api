@@ -41,9 +41,9 @@ curl -i http://localhost:443/v1/AUTH_glfs/user  -X PUT -H "X-Auth-Token: "
 
 上传分片文件
 
-curl -i http://localhost:443/v1/AUTH_glfs/segments/test/seg_test/1  -X PUT -H "X-Auth-Token: " --data-binary '1' 
+curl -i http://localhost:443/v1/AUTH_glfs/segments/seg_test/1  -X PUT -H "X-Auth-Token: " --data-binary '1' 
 
-curl -i http://localhost:443/v1/AUTH_glfs/segments/test/seg_test/2  -X PUT -H "X-Auth-Token: " --data-binary '2'
+curl -i http://localhost:443/v1/AUTH_glfs/segments/seg_test/2  -X PUT -H "X-Auth-Token: " --data-binary '2'
 
 上传 manifest文件
 
@@ -133,4 +133,15 @@ X-Static-Large-Object: True
 
 为get时，get_or_head 不执行
 
+curl -i http://localhost:443/v1/AUTH_glfs/segments/seg_test/2  -X PUT -H "X-Auth-Token: " -T install.log.syslog
+/mnt/gluster-object/glfs/segments/seg_test/2  1ad0d1c5bf0e394c390555de8015a51d 
 
+
+curl -i http://localhost:443/v1/AUTH_glfs/segments/seg_test/1  -X PUT -H "X-Auth-Token: " -T install.log
+/mnt/gluster-object/glfs/segments/seg_test/1  b96721733c7303eba6cb939a3b70bf00
+
+curl -i -X PUT -d '[{"path": "/segments/seg_test/1","etag": "b96721733c7303eba6cb939a3b70bf00","size_bytes": 17729},{"path": "/segments/seg_test/2","etag": "1ad0d1c5bf0e394c390555de8015a51d","size_bytes": 6224}]' "http://localhost:443/v1/AUTH_glfs/user/seg_test?multipart-manifest=put"  -H "X-Auth-Token: " -H "X-Static-Large-Object: True"
+
+获取对象
+
+curl -i http://localhost:443/v1/AUTH_glfs/user/seg_test -X GET -H "X-Auth-Token: "
