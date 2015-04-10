@@ -198,12 +198,14 @@ def validate_object(metadata):
         logging.warn('validate_object: No metadata')
         return False
 
-    if X_TIMESTAMP not in metadata.keys() or \
-       X_CONTENT_TYPE not in metadata.keys() or \
-       X_ETAG not in metadata.keys() or \
+#    if X_TIMESTAMP not in metadata.keys() or \ 
+#       X_CONTENT_TYPE not in metadata.keys() or \ 
+    if X_ETAG not in metadata.keys() or \
        X_CONTENT_LENGTH not in metadata.keys() or \
-       X_TYPE not in metadata.keys() or \
-       X_OBJECT_TYPE not in metadata.keys():
+       X_TYPE not in metadata.keys():
+        
+#       X_TYPE not in metadata.keys() or \
+#       X_OBJECT_TYPE not in metadata.keys():
         #logging.warn('validate_object: Metadata missing entries: %s' % metadata)
         return False
 
@@ -361,9 +363,9 @@ def get_object_metadata(obj_path):
         is_dir = (stats.st_mode & 0040000) != 0
         metadata = {
             X_TYPE: OBJECT,
-            X_TIMESTAMP: normalize_timestamp(stats.st_ctime),
-            X_CONTENT_TYPE: DIR_TYPE if is_dir else FILE_TYPE,
-            X_OBJECT_TYPE: DIR if is_dir else FILE,
+#            X_TIMESTAMP: normalize_timestamp(stats.st_ctime),
+#            X_CONTENT_TYPE: DIR_TYPE if is_dir else FILE_TYPE,
+#            X_OBJECT_TYPE: DIR if is_dir else FILE,
             X_CONTENT_LENGTH: 0 if is_dir else stats.st_size,
             X_ETAG: md5().hexdigest() if is_dir else _get_etag(obj_path),
             }

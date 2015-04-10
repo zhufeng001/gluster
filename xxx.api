@@ -27,9 +27,27 @@ curl -i http://localhost:443/v1/AUTH_glfs/test/11 -X GET -H "X-Auth-Token: "
 
 
 
+创建
+curl -i http://localhost:443/v1/AUTH_glfs/test/12 -X PUT -H "X-Auth-Token: "  --data-binary '1'
 
 
+分片功能
 
+创建容器 对象名字 /test/seg_test
+
+curl -i http://localhost:443/v1/AUTH_glfs/segments -X PUT -H "X-Auth-Token: "
+
+curl -i http://localhost:443/v1/AUTH_glfs/user  -X PUT -H "X-Auth-Token: "
+
+上传分片文件
+
+curl -i http://localhost:443/v1/AUTH_glfs/segments/test/seg_test/1  -X PUT -H "X-Auth-Token: " --data-binary '1' 
+
+curl -i http://localhost:443/v1/AUTH_glfs/segments/test/seg_test/2  -X PUT -H "X-Auth-Token: " --data-binary '2'
+
+上传 manifest文件
+
+curl -i -X PUT -d '[{"path": "/cont/object","etag": "etagoftheobjectsegment","size_bytes": 1048576}]' "http://localhost:443/v1/AUTH_glfs/user/seg_test?multipart-manifest=put"  -H "X-Auth-Token: " -H "X-Static-Large-Object: True"
 
 
 
@@ -47,6 +65,7 @@ curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/s1?op=MOVE&ftype=d&type=N
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test2/cc?op=COPY&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/aa"
 重命名
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/112"
+
 
 链接管理
 
@@ -92,4 +111,26 @@ curl -i -X POST -d  "{"block_list":["md5":"value", "md5":"value","md5":"value" ]
 
 获取配额
 curl -i -X GET "http://IP:Port/v1/AUTH_{Tenant_id}/quota?op=info[&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}"
+
+
+上传分片文件
+
+上传manifest文件
+
+X-Static-Large-Object: True
+
+[{"path": "/cont/object",
+      "etag": "etagoftheobjectsegment",
+      "size_bytes": 1048576}, ...]
+
+删除segs文件
+?multipart-manifest=delete
+
+获取segs文件
+
+只获取manifest文件
+?multipart-manifest=get
+
+为get时，get_or_head 不执行
+
 

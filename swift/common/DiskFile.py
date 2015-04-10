@@ -96,6 +96,19 @@ class Gluster_DiskFile(DiskFile):
         if not os.path.exists(self.datadir + '/' + self.obj):
             return
         
+        self.metadata = read_metadata(self.datadir + '/' + self.obj)
+        if not self.metadata:
+            create_object_metadata(self.datadir + '/' + self.obj)
+            self.metadata = read_metadata(self.datadir + '/' + self.obj)
+
+
+        if not validate_object(self.metadata):
+            create_object_metadata(self.datadir + '/' + self.obj)
+            self.metadata = read_metadata(self.datadir + '/' +
+                                        self.obj)
+            
+        self.filter_metadata()
+        
         if os.path.isdir(self.datadir + '/' + self.obj):
             self.is_dir = True
         else:
@@ -133,7 +146,13 @@ class Gluster_DiskFile(DiskFile):
         return True
 
     
-    def put(self, fd, tmppath, extension=''):
+    def put_metadata(self, metadata):
+        
+        obj_path = self.datadir + '/' + self.obj
+        write_metadata(obj_path, metadata)
+        self.metadata = metadata
+
+    def put(self, fd, tmppath, metadata,extension=''):
         """
         Finalize writing the file on disk, and renames it from the temp file to
         the real location.  This should be called after the data has been
@@ -144,12 +163,16 @@ class Gluster_DiskFile(DiskFile):
         :param metadata: dictionary of metadata to be written
         :param extention: extension to be used when making the file
         """
+        
         if extension == '.ts':
             # TombStone marker (deleted)
             return True
-
+        
+        metadata[X_TYPE] = OBJECT
+        
         if extension == '.meta':
-            
+            # Metadata recorded separately from the file
+            self.put_metadata(metadata)
             return True
 
        
@@ -160,6 +183,11 @@ class Gluster_DiskFile(DiskFile):
                           (self.datadir , self.obj))
             return False
 
+        write_metadata(tmppath, metadata)
+        if X_CONTENT_LENGTH in metadata:
+            self.drop_cache(fd, 0, int(metadata[X_CONTENT_LENGTH]))
+        tpool.execute(os.fsync, fd)
+        
         if self.obj_path:
             dir_objs = self.obj_path.split('/')
             tmp_path = ''
@@ -178,6 +206,7 @@ class Gluster_DiskFile(DiskFile):
         renamer(tmppath, os.path.join(self.datadir,
                                       self.obj))
         do_chown(os.path.join(self.datadir, self.obj), self.uid, self.gid)
+        self.metadata = metadata
         
         return True
 
@@ -189,7 +218,8 @@ class Gluster_DiskFile(DiskFile):
         :param timestamp: timestamp to compare with each file
         """
         
-        self.unlink()
+        if self.metadata:
+            self.unlink()
 
     def unlink(self):
         """
@@ -214,6 +244,7 @@ class Gluster_DiskFile(DiskFile):
                         raise
 
         
+        self.metadata = {}
         self.data_file = None
 
     def copy(self,srcfile):
@@ -250,12 +281,29 @@ class Gluster_DiskFile(DiskFile):
             if self.data_file:
                 file_size = os.path.getsize(self.data_file)
                 
+                if  X_CONTENT_LENGTH in self.metadata:
+                    metadata_size = int(self.metadata[X_CONTENT_LENGTH])
+                    if file_size != metadata_size:
+                        self.metadata[X_CONTENT_LENGTH] = file_size
+                        self.update_object(self.metadata)
+                        
                 return file_size
         except OSError, err:
             if err.errno != errno.ENOENT:
                 raise
         raise DiskFileNotExist('Data File does not exist.')
 
+    def update_object(self, metadata):
+        obj_path = self.datadir + '/' + self.obj
+        write_metadata(obj_path, metadata)
+        self.metadata = metadata
+        
+    def filter_metadata(self):
+        if X_TYPE in self.metadata:
+            self.metadata.pop(X_TYPE)
+        if X_OBJECT_TYPE in self.metadata:
+            self.metadata.pop(X_OBJECT_TYPE)
+            
     @contextmanager
     def mkstemp(self):
         """Contextmanager to make a temporary file."""
