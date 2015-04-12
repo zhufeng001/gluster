@@ -135,11 +135,11 @@ xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&
 ----------------------------------------
 	获取文件历史版本？
 
-	获取用户操作历史
+获取用户操作历史
 
-	清除用户操作历史
+清除用户操作历史
 
-获取文件属性
+	获取文件属性
 
 获取回收站文件列表
 
@@ -149,7 +149,9 @@ xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&
 
 设置权限
 
-获取用户文件列表
+设置配额
+
+	获取用户文件列表
 
 http://tarballs.openstack.org/swift/
 
