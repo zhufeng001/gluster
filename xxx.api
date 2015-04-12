@@ -145,3 +145,31 @@ curl -i -X PUT -d '[{"path": "/segments/seg_test/1","etag": "b96721733c7303eba6c
 获取对象
 
 curl -i http://localhost:443/v1/AUTH_glfs/user/seg_test -X GET -H "X-Auth-Token: "
+
+
+对象历史版本
+
+
+curl -i http://localhost:443/v1/AUTH_glfs/versions  -X PUT -H "X-Auth-Token: "
+
+curl -i -X PUT http://localhost:443/v1/AUTH_glfs/user  -H "X-Auth-Token: " -H "X-Versions-Location: versions"
+
+创建对象
+
+curl -i -X PUT --data-binary 1 http://localhost:443/v1/AUTH_glfs/user/version_object_test -H "X-Auth-Token: " 
+
+curl -i -X PUT --data-binary 2 http://localhost:443/v1/AUTH_glfs/user/version_object_test -H "X-Auth-Token: " 
+
+
+查看version列表
+
+curl -i -X GET http://localhost:443/v1/AUTH_glfs/versions?prefix=013version_object_test/ -H "X-Auth-Token: "
+
+删除当前一版本
+
+curl -i -X DELETE http://localhost:443/v1/AUTH_glfs/user/version_object_test -H "X-Auth-Token: "
+
+重新查看
+curl -i -X GET http://localhost:443/v1/AUTH_glfs/versions?prefix=013version_object_test/ -H "X-Auth-Token: "
+
+
