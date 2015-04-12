@@ -31,6 +31,8 @@ from gluster.swift.common.utils import X_CONTENT_TYPE, X_CONTENT_LENGTH, \
 import logging
 from swift.obj.server import DiskFile
 
+from gluster.swift.common.path_utils import parent_path
+
 
 DATADIR = 'objects'
 ASYNCDIR = 'async_pending'
@@ -92,6 +94,7 @@ class Gluster_DiskFile(DiskFile):
         self.gid = int(gid)
         
         self.data_file = os.path.join(self.datadir, self.obj)
+        self.fhr_path = parent_path(self.data_file)
         
         if not os.path.exists(self.datadir + '/' + self.obj):
             return
@@ -133,7 +136,11 @@ class Gluster_DiskFile(DiskFile):
     def is_deleted(self):
         
         return not os.path.exists(self.data_file)
-
+    
+    def fhr_dir_is_deleted(self):
+        
+        return not os.path.exists(self.fhr_path)
+    
     def create_dir_object(self, dir_path):
         #TODO: if object already exists???
         if os.path.exists(dir_path) and not os.path.isdir(dir_path):
