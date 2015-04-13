@@ -1,0 +1,21 @@
+设置配额
+
+"POST", "PUT","COPY"
+
+X-Account-Meta-Quota-Bytes account put  post操作时已处理 quota-bytes
+
+# filter:account-quotas
+
+# api
+
+用户操作历史，和web框架下的回首站？如何？去搞？最好是用框架，而不是自己去造轮子，不好。
+
+回收站功能。采用uuid，然后sys和user两个目录。存放属性。以/usr/uuid和/sys/uuid命名
+存储路径和时间（删除的时间）
+
+因此，读回收站的内容，就是去读/recycle/sys
+的信息。并用meta作为属性进行管理。回收站不存在层次关系。
+
+对于层次关系的meta管理，该如何？
+
+主要是为了解决重复删除的问题
