@@ -400,9 +400,23 @@ class DiskDir(DiskCommon):
 
     def update_metadata(self, metadata):
         assert self.metadata, "Valid container/account metadata should have been created by now"
+        
         if metadata:
             new_metadata = self.metadata.copy()
-            new_metadata.update(metadata)
+            
+            if metadata.has_key('X-Account-Meta-Bytes-Add'):
+                content_length = metadata.get('X-Account-Meta-Bytes-Add')[0]
+                bused, timestamp = new_metadata[X_BYTES_USED]
+                new_metadata[X_BYTES_USED] = (int(str(bused)) + int(content_length), timestamp)
+                
+            elif metadata.has_key('X-Account-Meta-Bytes-Del'):
+                content_length = metadata.get('X-Account-Meta-Bytes-Del')[0]
+                bused, timestamp = new_metadata[X_BYTES_USED]
+                new_metadata[X_BYTES_USED] = (int(str(bused)) - int(content_length), timestamp)
+                
+            else:
+                new_metadata.update(metadata)
+                
             if new_metadata != self.metadata:
                 write_metadata(self.datadir, new_metadata)
                 self.metadata = new_metadata
