@@ -60,3 +60,5 @@ sys/meta目录。此种存放所有的属性文件了？而，在其dir中也是
 即，/test/test1/test2/cc.txt /test/test1/test2/metadata/cc.txt
 
 /test/test1/test2 /test/test1/metadat/test2
+
+所以，决定先搞用户操作？
