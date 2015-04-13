@@ -149,7 +149,7 @@ xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&
 
 设置权限
 
-设置配额
+	设置配额
 
 	获取用户文件列表
 
