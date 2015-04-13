@@ -55,6 +55,8 @@ sys/meta目录。此种存放所有的属性文件了？而，在其dir中也是
 
 
 同样，可以设置metadata目录的前缀。随机数么设置一个全局统一的uuid
+
+因此，meta_file的路径也是要第一时间就能确定的了。和data_file一样
 即，/test/test1/test2/cc.txt /test/test1/test2/metadata/cc.txt
 
 /test/test1/test2 /test/test1/metadat/test2
