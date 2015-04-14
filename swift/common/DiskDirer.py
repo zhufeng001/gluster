@@ -23,7 +23,7 @@ from gluster.swift.common.utils import clean_metadata, dir_empty, rmdirs, \
      DEFAULT_UID, validate_object, create_object_metadata, read_metadata, \
      write_metadata, X_CONTENT_TYPE, X_CONTENT_LENGTH, X_TIMESTAMP, \
      X_PUT_TIMESTAMP, X_TYPE, X_ETAG, X_OBJECTS_COUNT, X_BYTES_USED, \
-     X_CONTAINER_COUNT, CONTAINER,write_pickle_meta,read_pickle_meta
+     X_CONTAINER_COUNT, CONTAINER,meta_write_metadata,meta_read_metadata
      
 from gluster.swift.common import Glusterfs
 
@@ -163,7 +163,7 @@ class DiskDirer(DiskCommon):
                 list_item = []
                 list_item.append(obj)
                 obj_path = os.path.join(self.datadir, obj)
-                metadata = read_pickle_meta(obj_path)
+                metadata = meta_read_metadata(obj_path)
                 if metadata:
                     list_item.append(int(metadata[X_CONTENT_LENGTH]))
                     list_item.append(metadata[X_ETAG])
