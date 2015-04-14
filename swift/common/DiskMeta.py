@@ -102,7 +102,7 @@ class Gluster_DiskMeta(SwiftFile):
         self.container = container
         if 'recycle' == container:
             self.recycle_uuid = recycle_uuid
-            self.metafile = os.path.join(self.datadir[:-4]+'/'+'meta',self.recycle_uuid)
+            self.metafile = os.path.join(self.datadir[:-5]+'/'+'meta',self.recycle_uuid)
             self.meta_fhr_path = parent_path(self.metafile) 
             
         if self.meta_fhr_dir_is_deleted():
@@ -168,7 +168,6 @@ class Gluster_DiskMeta(SwiftFile):
     
     def meta_put_metadata(self, metadata):
         
-        
         meta_write_metadata(self.metafile, metadata)
         self.metadata = metadata
 
@@ -229,9 +228,9 @@ class Gluster_DiskMeta(SwiftFile):
         """
         
         if self.metadata:
-            self.unlink()
+            self.meta_unlink()
 
-    def unlink(self):
+    def meta_unlink(self):
         """
         Remove the file.
         """
@@ -249,6 +248,7 @@ class Gluster_DiskMeta(SwiftFile):
             if fname == self.obj:
                 try:
                     do_unlink(os.path.join(self.datadir, fname))
+                    do_unlink(self.metafile)
                 except OSError, err:
                     if err.errno != errno.ENOENT:
                         raise
