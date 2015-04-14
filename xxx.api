@@ -199,7 +199,7 @@ curl -i http://localhost:443/v1/AUTH_glfs/user/recycle_test -X DELETE -H "X-Auth
 
 curl -i -X GET "http://localhost:443/v1/AUTH_glfs/listrecycle?op=RECYCLER&start=0&limit=10&type=NORMAL" -H "X-Auth-Token: "
 
-curl -i -X GET "http://localhost:443/v1/AUTH_glfs/recycle/user?op=LIST&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+curl -i -X GET "http://localhost:443/v1/AUTH_glfs/recycle/meta?op=LIST&ftype=d&type=NORMAL" -H "X-Auth-Token: "
 
 bytes , hash , name , 
 path , uuid , ftype
