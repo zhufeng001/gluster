@@ -229,7 +229,12 @@ class Gluster_DiskMeta(SwiftFile):
         
         if self.metadata:
             self.meta_unlink()
-
+            
+    def meta_del(self):
+        
+        if os.path.exists(self.metafile):
+            do_unlink(self.metafile)
+            
     def meta_unlink(self):
         """
         Remove the file.
@@ -248,12 +253,11 @@ class Gluster_DiskMeta(SwiftFile):
             if fname == self.obj:
                 try:
                     do_unlink(os.path.join(self.datadir, fname))
-                    do_unlink(self.metafile)
                 except OSError, err:
                     if err.errno != errno.ENOENT:
                         raise
 
-        
+        do_unlink(self.metafile)
         self.metadata = {}
         self.data_file = None
 

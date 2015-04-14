@@ -208,6 +208,10 @@ path , uuid , ftype
 
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/uuid?op=MOVE&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/user_path"
 
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/tuSp2iAU-EWgW5q-E1JU?op=MOVE&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/recycle_test"
+
+[{"hash": "ff89f933b2ca8df408fa57d357f1afdd", "uuid": "tuSp2iAU-EWgW5q-E1JU", "bytes": 27633, "ftype": "f", "path": "recycle_test", "name": "tuSp2iAU-EWgW5q-E1JU"}][root@swift8 user]
+
 以下为调试api
 
 '''
