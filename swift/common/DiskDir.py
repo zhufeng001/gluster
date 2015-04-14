@@ -277,12 +277,7 @@ class DiskDir(DiskCommon):
         """
         Returns tuple of name, created_at, size, content_type, etag.
         """
-        funcstr = 'list_objects_iter '
-        logstr1 = 'limit: %s, marker: %s, end_marker: %s' % (limit, marker, end_marker)
-        logstr2 = 'prefix: %s, delimiter: %s, path: %s' % (prefix, delimiter, path)
-        logstr = funcstr+logstr1+logstr2
-        syslog.syslog(syslog.LOG_ERR,logstr)
-        
+    
         if path:
             prefix = path = path.rstrip('/') + '/'
             delimiter = '/'

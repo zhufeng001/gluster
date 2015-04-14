@@ -21,8 +21,8 @@ from tempfile import mkstemp
 from contextlib import contextmanager
 from swift.common.utils import normalize_timestamp, renamer
 from gluster.swift.common.utils import mkdirs, rmdirs, validate_object, \
-     create_object_metadata,  do_open, do_close, do_unlink, do_chown, \
-     do_stat, do_listdir, read_metadata, write_metadata
+     meta_create_object_metadata,  do_open, do_close, do_unlink, do_chown, \
+     do_stat, do_listdir, meta_read_metadata, meta_write_metadata
      
 from gluster.swift.common.utils import X_CONTENT_TYPE, X_CONTENT_LENGTH, \
      X_TIMESTAMP, X_PUT_TIMESTAMP, X_TYPE, X_ETAG, X_OBJECTS_COUNT, \
@@ -42,7 +42,7 @@ KEEP_CACHE_SIZE = (5 * 1024 * 1024)
 DISALLOWED_HEADERS = set('content-length content-type deleted etag'.split())
 
 
-class Gluster_DiskFile(SwiftFile):
+class Gluster_DiskMeta(SwiftFile):
     """
     Manage object files on disk.
 
@@ -60,7 +60,7 @@ class Gluster_DiskFile(SwiftFile):
 
     def __init__(self, path, device, partition, account, container, obj,
                  logger, keep_data_fp=False, disk_chunk_size=65536,
-                 uid=DEFAULT_UID, gid=DEFAULT_GID, iter_hook=None):
+                 uid=DEFAULT_UID, gid=DEFAULT_GID, iter_hook=None,recycle_uuid=''):
         
         self.iter_hook = iter_hook
         self.disk_chunk_size = disk_chunk_size
@@ -77,8 +77,6 @@ class Gluster_DiskFile(SwiftFile):
         else:
             self.name = container
             
-        #Absolute path for obj directory.
-        
         self.datadir = os.path.join(path, device, self.name)
         
         self.device_path = os.path.join(path, device)
@@ -101,6 +99,15 @@ class Gluster_DiskFile(SwiftFile):
         self.data_file = os.path.join(self.datadir, self.obj)
         self.fhr_path = parent_path(self.data_file)
         
+        self.container = container
+        if 'recycle' == container:
+            self.recycle_uuid = recycle_uuid
+            self.metafile = os.path.join(self.datadir[:-4]+'/'+'meta',self.recycle_uuid)
+            self.meta_fhr_path = parent_path(self.metafile) 
+            
+        if self.meta_fhr_dir_is_deleted():
+            self.create_dir_object(self.meta_fhr_path)
+            
         if not os.path.exists(self.datadir + '/' + self.obj):
             return
         
@@ -110,21 +117,18 @@ class Gluster_DiskFile(SwiftFile):
             self.fp = do_open(self.data_file, 'rb')
             if not keep_data_fp:
                 self.close(verify_file=False)
-                
-        
-        self.metadata = read_metadata(self.datadir + '/' + self.obj)
+                  
+        self.metadata = meta_read_metadata(self.metafile)
         if not self.metadata:
-            create_object_metadata(self.datadir + '/' + self.obj)
-            self.metadata = read_metadata(self.datadir + '/' + self.obj)
-
+            meta_create_object_metadata(self.data_file,self.metafile)
+            self.metadata = meta_read_metadata(self.metafile)
 
         if not validate_object(self.metadata):
-            create_object_metadata(self.datadir + '/' + self.obj)
-            self.metadata = read_metadata(self.datadir + '/' +
-                                        self.obj)
+            meta_create_object_metadata(self.data_file,self.metafile)
+            self.metadata = meta_read_metadata(self.metafile)
             
         self.filter_metadata()
-        
+                 
     def close(self, verify_file=True):
         """
         Close the file. Will handle quarantining file if necessary.
@@ -147,21 +151,25 @@ class Gluster_DiskFile(SwiftFile):
         
         return not os.path.exists(self.fhr_path)
     
+    def meta_fhr_dir_is_deleted(self):
+        
+        return not os.path.exists(self.meta_fhr_path)
+    
     def create_dir_object(self, dir_path):
-        #TODO: if object already exists???
+        
         if os.path.exists(dir_path) and not os.path.isdir(dir_path):
             self.logger.error("Deleting file %s", dir_path)
             do_unlink(dir_path)
-        #If dir aleady exist just override metadata.
+       
         mkdirs(dir_path)
         do_chown(dir_path, self.uid, self.gid)
         
         return True
-
-    def put_metadata(self, metadata):
+    
+    def meta_put_metadata(self, metadata):
         
-        obj_path = self.datadir + '/' + self.obj
-        write_metadata(obj_path, metadata)
+        
+        meta_write_metadata(self.metafile, metadata)
         self.metadata = metadata
 
     def put(self, fd, tmppath, metadata,extension=''):
@@ -174,7 +182,7 @@ class Gluster_DiskFile(SwiftFile):
         
         if extension == '.meta':
             # Metadata recorded separately from the file
-            self.put_metadata(metadata)
+            self.meta_put_metadata(metadata)
             return True
 
         # Check if directory already exists.
@@ -183,7 +191,8 @@ class Gluster_DiskFile(SwiftFile):
                           (self.datadir , self.obj))
             return False
 
-        write_metadata(tmppath, metadata)
+        meta_write_metadata(self.metafile, metadata)
+        
         if X_CONTENT_LENGTH in metadata:
             self.drop_cache(fd, 0, int(metadata[X_CONTENT_LENGTH]))
         tpool.execute(os.fsync, fd)
@@ -205,6 +214,7 @@ class Gluster_DiskFile(SwiftFile):
 
         renamer(tmppath, os.path.join(self.datadir,
                                       self.obj))
+        
         do_chown(os.path.join(self.datadir, self.obj), self.uid, self.gid)
         self.metadata = metadata
         
@@ -294,8 +304,8 @@ class Gluster_DiskFile(SwiftFile):
         raise DiskFileNotExist('Data File does not exist.')
 
     def update_object(self, metadata):
-        obj_path = self.datadir + '/' + self.obj
-        write_metadata(obj_path, metadata)
+        
+        meta_write_metadata(self.metafile, metadata)
         self.metadata = metadata
         
     def filter_metadata(self):

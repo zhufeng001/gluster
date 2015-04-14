@@ -107,6 +107,24 @@ def read_metadata(path):
                 key += 1
     return metadata
 
+def meta_write_metadata(metapath, metadata):
+    
+    assert isinstance(metadata, dict)
+    
+    with open(metapath,'wb' ) as f:  
+        pickle.dump(metadata , f )
+        
+def meta_read_metadata(metapath):
+
+    metadata = {}
+    if not os.path.exists(metapath):
+        return metadata
+    
+    with open(metapath,'rb') as f:
+        metadata = pickle.load(f)
+
+    return metadata
+
 def write_metadata(path, metadata):
     """
     Helper function to write pickled metadata for a File/Directory.
@@ -418,9 +436,25 @@ def restore_metadata(path, metadata):
         write_metadata(path, meta_new)
     return meta_new
 
+def meta_restore_metadata(path, metadata):
+    meta_orig = meta_read_metadata(path)
+    if meta_orig:
+        meta_new = meta_orig.copy()
+        meta_new.update(metadata)
+    else:
+        meta_new = metadata
+    if meta_orig != meta_new:
+        meta_write_metadata(path, meta_new)
+    return meta_new
+
 def create_object_metadata(obj_path):
     metadata = get_object_metadata(obj_path)
     return restore_metadata(obj_path, metadata)
+
+def meta_create_object_metadata(obj_path,metapath):
+    
+    metadata = get_object_metadata(obj_path)
+    return meta_restore_metadata(metapath, metadata)
 
 def create_container_metadata(cont_path):
     metadata = get_container_metadata(cont_path)

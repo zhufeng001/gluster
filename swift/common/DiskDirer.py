@@ -23,7 +23,8 @@ from gluster.swift.common.utils import clean_metadata, dir_empty, rmdirs, \
      DEFAULT_UID, validate_object, create_object_metadata, read_metadata, \
      write_metadata, X_CONTENT_TYPE, X_CONTENT_LENGTH, X_TIMESTAMP, \
      X_PUT_TIMESTAMP, X_TYPE, X_ETAG, X_OBJECTS_COUNT, X_BYTES_USED, \
-     X_CONTAINER_COUNT, CONTAINER
+     X_CONTAINER_COUNT, CONTAINER,write_pickle_meta,read_pickle_meta
+     
 from gluster.swift.common import Glusterfs
 
 from swift.common.constraints import CONTAINER_LISTING_LIMIT
@@ -69,7 +70,7 @@ class DiskDirer(DiskCommon):
     def __init__(self, path, drive, account, container,direr, logger,
                  uid=DEFAULT_UID, gid=DEFAULT_GID):
         self.root = path
-        
+        self.container = container
         self.datadir = os.path.join(path, drive,container,direr)
         
         self.account = account
@@ -140,14 +141,40 @@ class DiskDirer(DiskCommon):
                 if not metadata or not validate_object(metadata):
                     metadata = create_object_metadata(obj_path)
                 if metadata:
-                    list_item.append(metadata[X_TIMESTAMP])
+#                    list_item.append(metadata[X_TIMESTAMP])
                     list_item.append(int(metadata[X_CONTENT_LENGTH]))
-                    list_item.append(metadata[X_CONTENT_TYPE])
+#                    list_item.append(metadata[X_CONTENT_TYPE])
                     list_item.append(metadata[X_ETAG])
                 container_list.append(list_item)
 
         return container_list
 
+    def list_objects_meta_iter(self):
+        
+        self.update_object_count()
+        objects, object_count, bytes_used = self.object_info
+
+        if objects:
+            objects.sort()
+
+        container_list = []
+        if objects:
+            for obj in objects:
+                list_item = []
+                list_item.append(obj)
+                obj_path = os.path.join(self.datadir, obj)
+                metadata = read_pickle_meta(obj_path)
+                if metadata:
+                    list_item.append(int(metadata[X_CONTENT_LENGTH]))
+                    list_item.append(metadata[X_ETAG])
+                    if 'recycle' == self.container:
+                        list_item.append(metadata['user_path'])
+                        list_item.append(metadata['recycle_uuid'])
+                        list_item.append(metadata['ftype'])
+                container_list.append(list_item)
+
+        return container_list
+    
     def update_object_count(self):
         if not self.object_info:
             self.object_info = get_container_details(self.datadir)

@@ -180,3 +180,44 @@ curl -i -X HEAD http://localhost:443/v1/AUTH_glfs -H "X-Auth-Token: "
 18100369@qq.com
 
 curl -i -X POST http://localhost:443/v1/AUTH_glfs -H "X-Auth-Token: " -H "X-Remove-Account-Meta-Quota-Bytes: 1"
+
+回收站功能
+
+curl -i http://localhost:443/v1/AUTH_glfs/recycle  -X PUT -H "X-Auth-Token: "
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/meta?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+
+删除文件 
+
+curl -i http://localhost:443/v1/AUTH_glfs/user/recycle_test -X PUT -H "X-Auth-Token: " -T /root/install.log
+
+curl -i http://localhost:443/v1/AUTH_glfs/user/recycle_test -X DELETE -H "X-Auth-Token: "
+
+获取回收站的列表
+
+curl -i -X GET "http://localhost:443/v1/AUTH_glfs/listrecycle?op=RECYCLER&start=0&limit=10&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X GET "http://localhost:443/v1/AUTH_glfs/recycle/user?op=LIST&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+
+bytes , hash , name , 
+path , uuid , ftype
+
+从回收站中恢复
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/uuid?op=MOVE&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/user_path"
+
+以下为调试api
+
+'''
+curl –I –X POST -d '{"list":[{"path":"/user/recycle_test","ftype":"f","uuid":"xxxxx"}]}' "http://localhost:443/v1/AUTH_glfs/restorerecycle?op=RECYCLER&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test?op=MOVE&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test1/cc"
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/uuid?op=MOVE&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/user_path"
+
+curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/c","to":"/test/d","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL"-H "X-Auth-Token: "
+
+curl -i -X POST –d  '{"list":[{"uuid":"xxx","path":"/user/test1/b","ftype":"f"},{"uuid":"xxx1","path":"/user/test/d","ftype":"d"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVERECYCLE&type=NORMAL"-H "X-Auth-Token: "
+'''

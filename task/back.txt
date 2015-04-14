@@ -62,3 +62,14 @@ sys/meta目录。此种存放所有的属性文件了？而，在其dir中也是
 /test/test1/test2 /test/test1/metadat/test2
 
 所以，决定先搞用户操作？
+
+增加参数转换的app功能，参数过滤的功能？
+
+uuid，路径，都是删除文件的属性了？
+
+
+参照 Bulk delete功能，利用filter_app功能，把post -d list 分成多个request去搞。
+
+一个meta文件获取属性，一个是recycle回收站文件属性，要多一些。后期，可以直接替换至META_GET函数上
+
+对于meta属性的操作 增加meta的前缀 
