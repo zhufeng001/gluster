@@ -1198,7 +1198,7 @@ class Response(object):
         is the account; otherwise we set it to 'unknown'.
         """
         try:
-            vrs, realm, rest = self.request.split_path(2, 3, True)
+            vrs, realm, rest = split_path(self.request.path,2, 3, True)
             if realm in ('v1.0', 'auth'):
                 realm = 'unknown'
         except (AttributeError, ValueError):

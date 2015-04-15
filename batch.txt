@@ -1,0 +1,29 @@
+
+curl -i http://localhost:443/v1/AUTH_glfs/user/f1  -X PUT -H "X-Auth-Token: " -T /root/install.log
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/user/d1?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+
+
+删除
+curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/user/f1?op=DELETE&fype=d&type=NORMAL"  -H "X-Auth-Token: "
+
+移动
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/user/f1?op=MOVE&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/f2"
+
+复制文件
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/a1?op=COPY&type=NORMAL"  -H "X-Auth-Token: " -H "Destination: /a2/cc"
+
+curl -i -X POST -d  '{"list":[{"path":"/user/f1","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X POST –d '{"list":[{"from":"/user/f1","to":"/user/f2","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL" -H "X-Auth-Token:"
+
+curl -i -X POST –d '{"list":[{"from":"/user/f1","to":"/user/f3","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=COPY&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X POST –d '{"list":[{"uuid":"xxx","path":"/user/test1/b","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVERECYCLE&type=NORMAL"-H "X-Auth-Token: "
+
+
+curl -i -X POST -d  '{"list":[{"path":"/user/f2","ftype":"f"},{"path":"/user/f3","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X POST -d  '{"list":[{"from":"/user/f1","to":"/user/f2","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X POST -d  '{"list":[{"from":"/user/f1","to":"/user/f2","ftype":"f"},{"from":"/user/f3","to":"/user/f4","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=COPY&type=NORMAL" -H "X-Auth-Token: "
