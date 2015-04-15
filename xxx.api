@@ -79,6 +79,10 @@ curl -i -X POST -d  '{ "list":[{"path":"/test/c","ftype":"d"},{" path ":"/test/b
 curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/c","to":"/test/d","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL"-H "X-Auth-Token: "
 curl -i -X POST –d '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{"from":"/test1/b","to":"/test2/c","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=COPY&type=NORMAL" -H "X-Auth-Token: "
 
+curl -i -X POST –d  '{"list":[{"uuid":"xxx","path":"/user/test1/b","ftype":"f"},{"uuid":"xxx1","path":"/user/test/d","ftype":"d"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVERECYCLE&type=NORMAL"-H "X-Auth-Token: "
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/tuSp2iAU-EWgW5q-E1JU?op=MOVE&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/recycle_test"
+
 文件管理
 
 
@@ -210,7 +214,7 @@ curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/uuid?op=MOVE&ftyp
 
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/tuSp2iAU-EWgW5q-E1JU?op=MOVE&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/recycle_test"
 
-[{"hash": "ff89f933b2ca8df408fa57d357f1afdd", "uuid": "tuSp2iAU-EWgW5q-E1JU", "bytes": 27633, "ftype": "f", "path": "recycle_test", "name": "tuSp2iAU-EWgW5q-E1JU"}][root@swift8 user]
+[{"hash": "ff89f933b2ca8df408fa57d357f1afdd", "uuid": "tuSp2iAU-EWgW5q-E1JU", "bytes": 27633, "ftype": "f", "path": "/user/recycle_test", "name": "tuSp2iAU-EWgW5q-E1JU"}][root@swift8 user]
 
 以下为调试api
 

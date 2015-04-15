@@ -141,11 +141,11 @@ xxx curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&
 
 	获取文件属性
 
-获取回收站文件列表
+	获取回收站文件列表
 
-从回收站恢复
+	从回收站恢复
 
-清空回收站
+	清空回收站
 
 设置权限
 
