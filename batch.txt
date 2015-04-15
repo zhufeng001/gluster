@@ -15,11 +15,11 @@ curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/a1?op=COPY&type=NORMAL"  
 
 curl -i -X POST -d  '{"list":[{"path":"/user/f1","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
 
-curl -i -X POST –d '{"list":[{"from":"/user/f1","to":"/user/f2","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL" -H "X-Auth-Token:"
+curl -i -X POST -d '{"list":[{"from":"/user/f1","to":"/user/f2","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVE&type=NORMAL" -H "X-Auth-Token:"
 
-curl -i -X POST –d '{"list":[{"from":"/user/f1","to":"/user/f3","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=COPY&type=NORMAL" -H "X-Auth-Token: "
+curl -i -X POST -d '{"list":[{"from":"/user/f1","to":"/user/f3","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=COPY&type=NORMAL" -H "X-Auth-Token: "
 
-curl -i -X POST –d '{"list":[{"uuid":"xxx","path":"/user/test1/b","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVERECYCLE&type=NORMAL"-H "X-Auth-Token: "
+curl -i -X POST -d '{"list":[{"uuid":"xxx","path":"/user/test1/b","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVERECYCLE&type=NORMAL"-H "X-Auth-Token: "
 
 
 curl -i -X POST -d  '{"list":[{"path":"/user/f2","ftype":"f"},{"path":"/user/f3","ftype":"f"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=DELETE&type=NORMAL" -H "X-Auth-Token: "
