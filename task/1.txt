@@ -1,0 +1,134 @@
+颜色通值 0.80
+
+色温 7400
+
+0.65
+
+7600  6500
+
+对比度 70 52  色温 7500 颜色通值 0.65
+
+eclipse.ini
+
+-Dorg.eclipse.swt.internal.gtk.cairoGraphics=false
+
+eclipse设置启动器的图标，左击系统默认图标，即可选择
+
+svn co svn://127.0.0.1/minds
+
+手动添加服务 http://www.centoscn.com/CentOS/config/2014/0804/3424.html
+
+paste.deploy 
+
+composite:main 和 pipeline:main 的区别？
+
+paste.deploy Openstack源代码分析之paste.deploy http://blog.csdn.net/bluefire1991/article/details/13289485
+
+direr和object的区别，基本上没有，只能从参数上查看了。并且，需要传递给metadata才行。目录没有metadata，object才有。
+
+链接，可以参考object的COPY
+功能。但是链接，有目录功能，和文件功能？重新开一个层次，不太可能，因为
+有重复。
+
+link只有在目录的显示的时候，才能执行目录的现实了。看成目录了。其他的都是对于object的操作。HEAD,PUT,DELETE,执行OBJECT操作，GET 执行DIRER的操作了。因为会对原有的OBJECT的源码，影响较大，所以，重新写成APP的形式了。只能根据参数去判断了，不能根据路径自动的判断了。
+
+所以仿照direr的形式，形成两个层了。而不是依附于object层了，但是只能参数来判断了。而不能根据路径了。根据metadata了。
+
+并且和object在端口上共享了。
+
+link和obj一级，同位于direr和container之下，但是direr可以同时作为link的一部分来处理了。几把direr当成obj或者link的一部分，但是这个是和原来的obj直接container之下是不冲突的。
+
+若要改造link，则应该优先从GET，PUT，POST等之类，开始，而不是从iter_list等边缘的内容开始了。直接管理重要资源了。其他的小的内容就容易搞定了。
+
+关于如何在虚拟机上安装svn版本控制，直接现实代码的控制了，控制和分支了？是不是？subversion
+
+svn copy svn://192.168.1.115/v5578/swift svn://192.168.1.115/v5578/v2
+
+初步构想，既把branch拷贝到vm中，每当一个功能可用后，则copy至vn版本中，然后继续在branch上开发了。开发版本和备份版本了。
+
+可惜以前不会，否则能少走多少的弯路？
+
+grep -n 'direr' -r ./ --exclude-dir='.svn'
+
+object，link，direr就是评级的，解析的时候，凭借参数区分了？
+
+一觉醒来，发现需要直面定义的api了，擦。
+
+路径应该指的是，容器和obj的全称？
+
+把批量操作的req，改造为单个操作的req，最后，综合所有的resp，即可。
+
+改造其的env，增加ftype，qs_string ,destination head ?
+
+curl
+发送的data数据，是json，必须用单引号括起来，而不是双引号，否则长度识别有问题
+
+X-Auth-Token 如果没值，则不会在req.headers中出现
+
+controller, path_parts = self.get_controller(req) 
+controller = controller(self, **path_parts)
+根据req.path和req.GET 获取path_parts
+
+req.headers.get('X-Copy-From')
+
+/usr/lib/python2.6/site-packages/gluster_swift_ufo-1.1-py2.6.egg-info/entry_points.txt
+
+req的body curl的T和d选项共用req的body
+
+move 和copy的目的路径？采用改名字的方式？既，源路径和目的路径，源路径必须存在，目的路径的父路径必须存在
+
+下一步，是对于headers的精简了？
+文件的上传和下载，先去除掉x-copy-from，采用cp命令的方式。 去除掉metadata，只有文件的上传和下载，去掉head和post 函数
+
+>>> '/'.join(['','a','b'])
+'/a/b'
+>>> '/'.join(['a','b'])
+'a/b'
+>>> 
+
+versions的布置。先搞好api，然后修改源码？组零件？创建versions容器
+还需要给user容器，设置version的metadata？
+
+配置文件 allow_versions
+
+# 增加容器 X-Versions-Location
+
+删除容器 X-Remove-Versions-Location ,这个也就是为什么在处理属性的时候，需要一些remove 字符串的判断了？
+
+swift_versioned_copy用在版本之间的拷贝的时候，不用左任何的检查，核心在于二次调用object 的put操作上
+
+# 消除swift_versioned_copy？
+
+# _listing_iter
+
+修改container_info object_versions
+
+关于swift原有的逻辑是什么？先把last version移动到current ，然后删除了last version
+
+多版本和目录的移动？冲突？还有link的管理？都会增加复杂性？简单，目录移动，那版本所在的目录也要跟着移动。
+
+目录删除，创建？list copy，move，那版本呢？不受影响。只有删除和移动会受到影响？目录删除，所版本所在的目录都删除，否则移动后等于目录没有删除？目录是为object，文件服务的。
+
+
+构建versions api的命令
+
+x-static-large-object ? 还是x-object-manifest
+
+manifest 文件不会被 object_versions
+
+allow_versions`` to ``True``
+
+检查head user容器的属性X-Versions-Location，未发现则设置allow_versions = True
+
+mv /mnt/gluster-object/glfs/user/version_object_test /mnt/gluster-object/glfs/versions/013version_object_test/1428816256.43491
+mv: 无法将"/mnt/gluster-object/glfs/user/version_object_test" 移动至"/mnt/gluster-object/glfs/versions/013version_object_test/1428816256.43491": 没有那个文件或目录
+
+设置配额
+
+"POST", "PUT","COPY"
+
+X-Account-Meta-Quota-Bytes account put  post操作时已处理 quota-bytes
+
+filter:account-quotas
+
+api

@@ -52,3 +52,4 @@ X-Account-Meta-Quota-Bytes account put  post操作时已处理 quota-bytes
 
 5 逐步改造现有的属性方式，全都换为metadata文件的方式。支持dir和文件。
 
+object_versions操作 MOVE，COPY，DELETE操作即可
