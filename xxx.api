@@ -230,4 +230,6 @@ curl -i -X POST –d  '{"list":[{"from":"/test/a","to":"/test1/b","ftype":"d"},{
 curl -i -X POST –d  '{"list":[{"uuid":"xxx","path":"/user/test1/b","ftype":"f"},{"uuid":"xxx1","path":"/user/test/d","ftype":"d"}]}' "http://localhost:443/v1/AUTH_glfs/batch?op=MOVERECYCLE&type=NORMAL"-H "X-Auth-Token: "
 '''
 
+range功能
 
+curl -i -X GET $OBJ -H "Range: bytes=10240-20480,30720-40960"  -H "X-Auth-Token: " 
