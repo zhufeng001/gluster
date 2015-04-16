@@ -1,0 +1,30 @@
+
+
+curl -i http://localhost:443/v1/AUTH_userinit/register  -X PUT -H "X-Auth-Token: " 
+
+-H "X-Account-Meta-Quota-Bytes: 100"  
+
+
+创建用户
+curl -i http://localhost:443/v1/AUTH_glfs/user  -X PUT -H "X-Auth-Token: "
+
+quota功能
+
+curl -i -X POST http://localhost:443/v1/AUTH_glfs -H "X-Auth-Token: " -H "X-Account-Meta-Quota-Bytes: 100"
+
+分片功能
+curl -i http://localhost:443/v1/AUTH_glfs/segments -X PUT -H "X-Auth-Token: "
+
+历史版本
+curl -i http://localhost:443/v1/AUTH_glfs/versions  -X PUT -H "X-Auth-Token: "
+
+curl -i -X PUT http://localhost:443/v1/AUTH_glfs/user  -H "X-Auth-Token: " -H "X-Versions-Location: versions"
+
+回收站功能
+
+curl -i http://localhost:443/v1/AUTH_glfs/recycle  -X PUT -H "X-Auth-Token: "
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/meta?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
+

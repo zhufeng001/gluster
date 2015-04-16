@@ -403,15 +403,22 @@ class DiskDir(DiskCommon):
                 content_length = metadata.get('X-Account-Meta-Bytes-Add')[0]
                 bused, timestamp = new_metadata[X_BYTES_USED]
                 new_metadata[X_BYTES_USED] = (int(str(bused)) + int(content_length), timestamp)
+                new_metadata.pop('X-Account-Meta-Bytes-Add')
                 
             elif metadata.has_key('X-Account-Meta-Bytes-Del'):
                 content_length = metadata.get('X-Account-Meta-Bytes-Del')[0]
                 bused, timestamp = new_metadata[X_BYTES_USED]
                 new_metadata[X_BYTES_USED] = (int(str(bused)) - int(content_length), timestamp)
+                new_metadata.pop('X-Account-Meta-Bytes-Del')
                 
             else:
                 new_metadata.update(metadata)
                 
+            del_keys = ['X-Account-Meta-Bytes-Del','X-Account-Meta-Bytes-Add']
+            for dkey in del_keys:
+                if  new_metadata.has_key(dkey):
+                    new_metadata.pop(dkey)
+                      
             if new_metadata != self.metadata:
                 write_metadata(self.datadir, new_metadata)
                 self.metadata = new_metadata
