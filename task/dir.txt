@@ -27,15 +27,15 @@ curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/meta?op=MKDIRS&ftype=d
 
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
 
-删除文件
+创建目录
 
-curl -i http://localhost:443/v1/AUTH_glfs/user/recycle_test -X PUT -H "X-Auth-Token: " -T /root/install.log
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/user/dir_test?op=MKDIRS&ftype=d&type=NORMAL" -H "X-Auth-Token: "
 
-curl -i http://localhost:443/v1/AUTH_glfs/user/recycle_test -X DELETE -H "X-Auth-Token: "
+删除目录
+
+curl -i -X DELETE "http://localhost:443/v1/AUTH_glfs/user/dir_test?op=DELETE&ftype=d&recursive=true&type=NORMAL" -H "X-Auth-Token: "
 
 获取回收站的列表
-
-curl -i -X GET "http://localhost:443/v1/AUTH_glfs/listrecycle?op=RECYCLER&start=0&limit=10&type=NORMAL" -H "X-Auth-Token: "
 
 curl -i -X GET "http://localhost:443/v1/AUTH_glfs/recycle/meta?op=LIST&ftype=d&type=NORMAL" -H "X-Auth-Token: "
 
@@ -46,7 +46,7 @@ path , uuid , ftype
 
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/uuid?op=MOVE&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/user_path"
 
-curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/tuSp2iAU-EWgW5q-E1JU?op=MOVE&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/recycle_test"
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/tuSp2iAU-EWgW5q-E1JU?op=MOVE&ftype=f&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /user/dir_test"
 
 [{"hash": "ff89f933b2ca8df408fa57d357f1afdd", "uuid": "tuSp2iAU-EWgW5q-E1JU", "bytes": 27633, "ftype": "f", "path": "/user/recycle_test", "name": "tuSp2iAU-EWgW5q-E1JU"}][root@swift8 user]
 
