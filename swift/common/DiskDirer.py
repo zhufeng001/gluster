@@ -30,6 +30,8 @@ from gluster.swift.common import Glusterfs
 from swift.common.constraints import CONTAINER_LISTING_LIMIT
 from swift.common.utils import normalize_timestamp, TRUE_VALUES
 
+from gluster.swift.common.path_utils import GetPathSize
+
 
 DATADIR = 'containers'
 
@@ -47,7 +49,6 @@ else:
     _db_file = '/etc/swift/db_file.db'
 if not os.path.exists(_db_file):
     file(_db_file, 'w+')
-
 
 class DiskCommon(object):
     
@@ -197,4 +198,8 @@ class DiskDirer(DiskCommon):
         cmd = 'rm -rf %s/*' % (self.datadir)
         os.system(cmd)
         
+    def get_data_dir_size(self):
+        
+        return GetPathSize(self.datadir)
+
         

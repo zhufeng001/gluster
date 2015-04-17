@@ -23,14 +23,15 @@ from gluster.swift.common.utils import clean_metadata, dir_empty, rmdirs, \
      DEFAULT_UID, validate_object, create_object_metadata, read_metadata, \
      write_metadata, X_CONTENT_TYPE, X_CONTENT_LENGTH, X_TIMESTAMP, \
      X_PUT_TIMESTAMP, X_TYPE, X_ETAG, X_OBJECTS_COUNT, X_BYTES_USED, \
-     X_CONTAINER_COUNT, CONTAINER,meta_write_metadata,meta_read_metadata,meta_create_object_metadata
-     
+     X_CONTAINER_COUNT, CONTAINER,meta_write_metadata,meta_read_metadata,\
+     meta_create_object_metadata
+          
 from gluster.swift.common import Glusterfs
 
 from swift.common.constraints import CONTAINER_LISTING_LIMIT
 from swift.common.utils import normalize_timestamp, TRUE_VALUES
 
-from gluster.swift.common.path_utils import parent_path
+from gluster.swift.common.path_utils import parent_path,GetPathSize
 
 DATADIR = 'containers'
 
@@ -245,4 +246,6 @@ class DirMeta(DiskCommon):
         if os.path.exists(self.metafile):
             do_unlink(self.metafile)
             
-            
+    def get_data_dir_size(self):
+        
+        return GetPathSize(self.datadir)
