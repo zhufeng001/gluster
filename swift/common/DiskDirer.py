@@ -120,8 +120,11 @@ class DiskDirer(DiskCommon):
         """
         Remove directory/container if empty.
         """
-        if dir_empty(self.datadir):
-            rmdirs(self.datadir)
+        # if dir_empty(self.datadir):
+        
+        #     rmdirs(self.datadir)
+        cmd = 'rm -rf %s' % (self.datadir)
+        os.system(cmd)
 
     def list_objects_iter(self):
         
