@@ -65,6 +65,8 @@ curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/s1?op=MOVE&ftype=d&type=N
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test2/cc?op=COPY&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/aa"
 重命名
 curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/12?op=RENAME&ftype=d&type=NORMAL" -H "X-Auth-Token: " -H "Destination: /test3/112"
+重置
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/test/s2?op=RESET&ftype=d&recursive=true&type=NORMAL" -H "X-Auth-Token: "
 
 
 链接管理

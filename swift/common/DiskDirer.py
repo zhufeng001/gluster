@@ -125,6 +125,7 @@ class DiskDirer(DiskCommon):
         #     rmdirs(self.datadir)
         cmd = 'rm -rf %s' % (self.datadir)
         os.system(cmd)
+        self.dir_exists = False
 
     def list_objects_iter(self):
         
@@ -183,15 +184,17 @@ class DiskDirer(DiskCommon):
             self.object_info = get_container_details(self.datadir)
 
     def update_put_timestamp(self):
-        """
-        Create the container if it doesn't exist and update the timestamp
-        """
+        
         if not os.path.exists(self.datadir):
             self.put()
 
     def delete_db(self):
-        """
-        Delete the container
-        """
+        
         self.unlink()
 
+    def reset_db(self):
+        
+        cmd = 'rm -rf %s/*' % (self.datadir)
+        os.system(cmd)
+        
+        

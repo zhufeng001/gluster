@@ -51,4 +51,9 @@ curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user/tuSp2iAU-EWgW5q-E
 [{"hash": "ff89f933b2ca8df408fa57d357f1afdd", "uuid": "tuSp2iAU-EWgW5q-E1JU", "bytes": 27633, "ftype": "f", "path": "/user/recycle_test", "name": "tuSp2iAU-EWgW5q-E1JU"}][root@swift8 user]
 
 
+清空回收站
+curl –I –X POST "http://IP:Port/v1/AUTH_{Tenant_id}/clearrecycle?op=RECYCLER[&type=<NORMAL|SECRET|BACKUP>]" -H "X-Auth-Token: { Token_id}"
 
+
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/user?op=RESET&ftype=d&recursive=true&type=NORMAL" -H "X-Auth-Token: "
+curl -i -X PUT "http://localhost:443/v1/AUTH_glfs/recycle/meta?op=RESET&ftype=d&recursive=true&type=NORMAL" -H "X-Auth-Token: "
