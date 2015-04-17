@@ -96,7 +96,7 @@ uuid，路径，都是删除文件的属性了？
 
 # 8 创建user_init 的app，用来注册和初始化，管理用户的账户了
 
-9 完善quota的功能，包括put，copy，清空回收站操作
+# 9 完善quota的功能，包括put，copy，清空回收站操作
 
 # 10 回收站的功能，需要重新的处理下，整理下
 
@@ -108,5 +108,5 @@ range功能，即app_iter需要被赋值了。 打算两套Response共存了？�
 
 # 清空回收站的时候，需要把uuid config文的version目录删除掉
 
-容器增加reset功能，只对recycle容器有效
+# 容器增加reset功能，只对recycle容器有效
 

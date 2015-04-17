@@ -1,0 +1,12 @@
+制作rpm 
+
+centos环境 ，glusterfs-3.3.1-15.el6
+
+支持memcache
+
+支持负载均衡
+
+支持系统配置proxy-server.conf
+
+
+
