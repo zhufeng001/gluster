@@ -8,5 +8,8 @@ centos环境 ，glusterfs-3.3.1-15.el6
 
 支持系统配置proxy-server.conf
 
+https://124.16.141.143/Sari-Cloud-Backup/Cloud_Storage_Server
+
+
 
 
