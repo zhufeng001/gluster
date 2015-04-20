@@ -53,3 +53,25 @@ X-Account-Meta-Quota-Bytes account put  post操作时已处理 quota-bytes
 5 逐步改造现有的属性方式，全都换为metadata文件的方式。支持dir和文件。
 
 object_versions操作 MOVE，COPY，DELETE操作即可
+
+--------------------------------
+
+
+rpm包的制作，先把源码和配置文件合进去，然后去该目录的名字了。包括研究下，目录和文件是如何安装的了。
+
+首先，是直接把修改的swift和gluster的源码文件替换掉swift-1.7.4和ufo-1.1中的所有文件
+
+替换entry-point.txt
+
+替换 配置文件，直接为1.conf 而不是1.conf-gluster
+
+达到装完后就可以用的效果
+
+测试，测试所有的api功能，判断是否可用。
+
+增加memcache的功能，增加权限的判断。供中科院使用
+
+修改包的名字。去掉基本的gluster和swift的名字了。
+
+
+
