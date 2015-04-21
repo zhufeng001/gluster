@@ -11,5 +11,59 @@ centos环境 ，glusterfs-3.3.1-15.el6
 https://124.16.141.143/Sari-Cloud-Backup/Cloud_Storage_Server
 
 
+增加link和direr的目录需要
 
+分别隶属于obj和container？如何？
+
+使用生成的包安装后，检查 code，是否一致，和v11-1中的代码检查，是否一致
+
+搞conf文件，entry_points.txt，安装配置文件，安装后检查如何
+
+memcache 的问题，检验token
+
+先把1.conf-gluster 给换掉
+
+使用命令检验。检验。
+
+另外，只需要替换安装包的命令就可以了，命令不需要修改
+
+重新使用新的rpm包去修改？只修改目录名，和文件名，以及import的名字？
+
+编译为pyc文件，如何？
+
+注释文件/usr/lib/rpm/redhat/macros里的/usr/lib/rpm/brp-python-bytecompile
+
+%__os_install_post    \
+    /usr/lib/rpm/redhat/brp-compress \
+    %{!?__debug_package:/usr/lib/rpm/redhat/brp-strip
+%{__strip}} \
+    /usr/lib/rpm/redhat/brp-strip-static-archive
+%{__strip} \
+    /usr/lib/rpm/redhat/brp-strip-comment-note
+%{__strip} %{__objdump} \
+#    /usr/lib/rpm/brp-python-bytecompile \
+    /usr/lib/rpm/redhat/brp-java-repack-jars \
+%{nil}
+
+from: http://www.redhat.com/archives/rpm-list/2007-November/msg00020.html
+
+#rpm -ql rpm-build
+可以看见brp-python-bytecompile文件在那个目录下
+
+另外，重新搭建一个编译的环境，以后修改代码，会在那里修改了。重命名目录。增加memcache功能。
+
+把当前的代码和storage联系起来？这样搞？是否合适？
+
+重新建立git，等等，需要，必须要重命名。不在当前的基础上了。
+
+内部的swift不需要去改，只需要改掉gluster就可以了。把gluster换位cloud？
+
+需要赶快支持md5功能和nfs，cifs存储，以及文件重传等。
+
+
+tar czvf  comadmin_0625.tar.gz --exclude=images comadmin
+
+tar -jcvf gluster-swift-ufo-1.1.tar.gz  ufo/ --exclude=.svn
+
+tar -jcvf swift-1.7.4.tar.gz  swift-1.7.4/ --exclude=.svn
 

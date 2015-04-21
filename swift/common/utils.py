@@ -22,7 +22,7 @@ import cPickle as pickle
 from ConfigParser import ConfigParser, NoSectionError, NoOptionError
 from swift.common.utils import normalize_timestamp, TRUE_VALUES
 from gluster.swift.common.fs_utils import *
-from gluster.swift.common import Glusterfs
+
 
 X_CONTENT_TYPE = 'Content-Type'
 X_CONTENT_LENGTH = 'Content-Length'

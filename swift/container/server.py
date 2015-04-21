@@ -26,10 +26,7 @@ from gluster.swift.common.DiskDir import DiskDir
 class ContainerController(server.ContainerController):
     def _get_container_broker(self, drive, part, account, container):
         """
-        Overriden to provide the GlusterFS specific broker that talks to
-        Gluster for the information related to servicing a given request
-        instead of talking to a database.
-
+        
         :param drive: drive that holds the container
         :param part: partition the container is in
         :param account: account name
